@@ -26,4 +26,4 @@ python main.py
 
 - `DEVMAN_TOKEN` — ваш Devman token, подробнее можно почитать [тут](https://dvmn.org/api/docs/).
 - `TELEGRAM_TOKEN` — Telegram token вашего бота, для его получения нужно написать @BotFather в телеграме.
-- `CHAT_ID` — Чтобы получить свой chat_id, напишите в Telegram специальному боту: @userinfobot.
+- `TG_CHAT_ID` — Чтобы получить свой chat_id, напишите в Telegram специальному боту: @userinfobot.
