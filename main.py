@@ -24,19 +24,19 @@ def start_long_pooling(devman_token, telegram_token, telegram_chat_id):
             )
             response.raise_for_status()
 
-            response = response.json()
-            if response['status'] == 'timeout':
+            user_reviews = response.json()
+            if user_reviews['status'] == 'timeout':
                 params = {
-                    'timestamp': response['timestamp_to_request']
+                    'timestamp': user_reviews['timestamp_to_request']
                 }
                 continue
-            elif response['status'] == 'found':
+            elif user_reviews['status'] == 'found':
                 params = {
-                    'timestamp': response['last_attempt_timestamp']
+                    'timestamp': user_reviews['last_attempt_timestamp']
                 }
 
-            lesson_title = response["new_attempts"][0]["lesson_title"]
-            lesson_url = response["new_attempts"][0]["lesson_url"]
+            lesson_title = user_reviews["new_attempts"][0]["lesson_title"]
+            lesson_url = user_reviews["new_attempts"][0]["lesson_url"]
             message = f'Работа [{lesson_title}]({lesson_url}) готова'
 
             bot.send_message(
