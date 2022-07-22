@@ -1,3 +1,4 @@
+import logging
 from time import sleep
 
 import requests
@@ -5,8 +6,22 @@ import telegram
 from environs import Env
 
 
+class TgLoggerHandler(logging.Handler):
+    def __init__(self, token: str, user_id: int):
+        super().__init__()
+        self.user_id = user_id
+        self.token = token
+
+        self.bot = telegram.Bot(token=self.token)
+
+    def emit(self, record):
+        message = self.format(record)
+        self.bot.send_message(self.user_id, message, parse_mode="HTML")
+
+
 def start_long_pooling(devman_token, telegram_token, telegram_chat_id):
     bot = telegram.Bot(telegram_token)
+    logger.info("Бот запущен.")
 
     headers = {
         'Authorization': f'Token {devman_token}'
@@ -46,12 +61,15 @@ def start_long_pooling(devman_token, telegram_token, telegram_chat_id):
             )
 
         except requests.exceptions.ReadTimeout:
-            pass
+            logger.info("Привышено время ожидания.")
         except requests.exceptions.ConnectionError:
+            logger.error("Потеряно подключение к интернету.")
             sleep(5)
-            pass
         except requests.exceptions.HTTPError as exception:
-            print(exception)
+            logger.error(exception)
+        except Exception as exception:
+            logger.error(exception)
+            start_long_pooling(devman_token, telegram_token, telegram_chat_id)
 
 
 if __name__ == '__main__':
@@ -59,6 +77,11 @@ if __name__ == '__main__':
     Env.read_env()
     devman_token = env('DEVMAN_TOKEN')
     telegram_token = env('TELEGRAM_TOKEN')
+    telegram_debug_token = env('TELEGRAM_DEBUG_TOKEN')
     telegram_chat_id = env('TG_CHAT_ID')
+
+    logger = logging.getLogger("Telegram logger")
+    logger.setLevel(logging.WARNING)
+    logger.addHandler(TgLoggerHandler(telegram_debug_token, telegram_chat_id))
 
     start_long_pooling(devman_token, telegram_token, telegram_chat_id)
