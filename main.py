@@ -52,7 +52,7 @@ def start_long_pooling(devman_token, telegram_token, telegram_chat_id):
 
             lesson_title = user_reviews["new_attempts"][0]["lesson_title"]
             lesson_url = user_reviews["new_attempts"][0]["lesson_url"]
-            message = f'Работа [{lesson_title}]({lesson_url}) готова'
+            message = f'Работа [{lesson_title}]({lesson_url}) готова.'
 
             bot.send_message(
                 text=message,
