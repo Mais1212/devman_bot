@@ -69,7 +69,7 @@ def start_long_pooling(devman_token, telegram_token, telegram_chat_id):
             logger.error(exception)
         except Exception as exception:
             logger.error(exception)
-            start_long_pooling(devman_token, telegram_token, telegram_chat_id)
+            exit()
 
 
 if __name__ == '__main__':
